@@ -139,10 +139,10 @@ def dofit(eV, abscoef, guess, eVrange, fb=0):
     myMod = Model(alpha_sum, independent_vars=['E', 'Erange'])
     print(myMod.param_names)
     myMod.set_param_hint('b0',value=guess[0], min = 0.01, max = 100, vary = True)
-    myMod.set_param_hint('Ex', value=guess[1], min=0., max=0.08, vary=False)
-    myMod.set_param_hint('Eg', value=guess[2], min=eVrange[0], max=eVrange[1], vary=False)
-    myMod.set_param_hint('sigma_exc', value=guess[3], min=0.0001, max=0.1, vary=True)#, min=0)
-    myMod.set_param_hint('sigma_cont', value=guess[4], min=0.001, max=0.2,vary=True)
+    myMod.set_param_hint('Ex', value=guess[1], min=0.,  vary=False)
+    myMod.set_param_hint('Eg', value=guess[2], min=eVrange[0], max=eVrange[1], vary=True)
+    myMod.set_param_hint('sigma_exc', value=guess[3], min=0.0001, max=0.1, vary=False)#, min=0)
+    myMod.set_param_hint('sigma_cont', value=guess[4], min=0.001, max=0.2,vary=False)
     myMod.set_param_hint('mu_lognorm', value=guess[5], vary=True)
     myMod.set_param_hint('Ex_split', value=guess[6],min = 0, max = 80, vary=False)
     myMod.set_param_hint('Ex_broad', value=guess[7], min = 1, max = 10, vary=False)
@@ -185,23 +185,24 @@ def dofit(eV, abscoef, guess, eVrange, fb=0):
 # load and convert data
 #loaded = np.loadtxt('Mat1.txt', skiprows=0, delimiter='\t', unpack=False)
 
-File_name = r"nk_0br_1.txt"
+File_name = r"C:\Users\kober-czerny\Desktop\Krish\sample1.txt"
 Raw_File = pd.read_csv(File_name, sep="\t")
-eV = Raw_File["eV"].values
-absCoef = 2*np.pi*Raw_File["k-Bottom"].values/(1240*eV*1e-7)
+eV = 1240/Raw_File["nm"].values
+absCoef = 2.303 * Raw_File["Abs"].values/100e-7
+absCoef -= absCoef[200]
 
 scale =1e4
 absCoef /= scale # rescale
 
 # Guess parameters
 b0 = 10
-Ex = 21 # meV
-Eg = 1.58# eV
-sigma_exc = 37 # meV
+Ex = 245 # meV
+Eg = 2.3# eV
+sigma_exc = 70 # meV
 sigma_cont = 20# meV
 mu_lognorm = -0.2 # eV
 
-fit_range = [1.45, 1.65]
+fit_range = [1.7, 2.4]
 
 #########For 2D Materials %%%%%%
 Ex_split = 0#meV  (only used, if >0
